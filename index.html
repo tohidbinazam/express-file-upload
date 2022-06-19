@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+</head>
+<body>
+
+    <div class="my-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3>Upload your images</h3>
+                            <hr>
+                            <form method="post" action="http://localhost:5050/upload" enctype="multipart/form-data">
+                                <div class="my-5">
+                                    <label for="image-upload">
+                                        <img style="width: 300px; object-fit:cover" src="https://jenwlee.files.wordpress.com/2021/01/uploadfiles.png" alt="">
+                                    </label>
+                                    <input style="display: none;" type="file" name="photos" id="image-upload" multiple>
+                                    <div id="preview">
+                                        <!-- <img style="width: 230px; height: 150px; object-fit:cover" src="https://jenwlee.files.wordpress.com/2021/01/uploadfiles.png" alt=""> -->
+                                    </div>
+                                </div>
+                                <div class="my-5">
+                                    <label for="cv-upload">
+                                        <img style="width: 300px; object-fit:cover" src="https://www.iconpacks.net/icons/2/free-pdf-upload-icon-2619-thumb.png" alt="">
+                                    </label>
+                                    <input style="display: none;" type="file" name="cv" id="cv-upload">
+                                    <ul class="list-group">
+                                        <!-- <li class="list-group-item d-flex justify-content-between">Hello <button class="btn-close"></button></li> -->
+                                    </ul>
+                                </div>
+                                <button class="btn btn-success" type="submit">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Photo upload part
+        const image_upload = document.getElementById('image-upload')
+        const preview = document.getElementById('preview')
+
+        image_upload.onchange = (e) => {
+            let files = e.target.files
+
+            preview.innerHTML = ''
+            for (file of files) {
+                if (file.type == 'image/jpeg' || file.type == 'image/png' || file.type == 'image/svg'){
+                    preview.innerHTML += `<img style="width: 230px; height: 150px; object-fit:cover" src="${URL.createObjectURL(file)}" alt="">`
+
+                } else {
+                    alert(`"${file.name}" This file is Invalid`)
+                }
+            }
+        }
+
+
+        // CV upload part
+        const cv_upload = document.getElementById('cv-upload')
+        const list_group = document.querySelector('.list-group')
+
+        cv_upload.onchange = (e) => {
+            let files = e.target.files
+            console.log(files);
+            
+            for (file of files) {
+                if (file.type == 'application/pdf'){
+                    list_group.innerHTML = `<li class="list-group-item d-flex justify-content-between">${file.name} <button class="btn-close"></button></li>`
+
+                } else {
+                    alert(`"${file.name}" This file is Invalid`)
+                }
+            }
+        }
+
+    </script>
+
+
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+</body>
+</html>
