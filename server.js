@@ -15,13 +15,28 @@ connectMongoDB()
 
 const storage = multer.diskStorage({
     destination : (req, file, cb) => {
-        cb(null, './media/photos')
+        if (file.fieldname == 'photos') {
+            cb(null, './media/photos')
+        } else if(file.fieldname == 'cv'){
+            cb(null, './media/cv')
+        }
+        
     },
     filename : (req, file, cb) => {
-        let ext = path.extname(file.originalname)
+        if (file.fieldname == 'photos') {
+            let ext = path.extname(file.originalname)
         
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-        cb(null, file.fieldname + '-' + uniqueSuffix + ext)
+            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+            cb(null, file.fieldname + '-' + uniqueSuffix + ext)
+
+        } else if(file.fieldname == 'cv') {
+            let ext = path.extname(file.originalname)
+        
+            let date = new Date()
+            const uniqueSuffix = `${date.getMonth()}-${date.getDate()}-${date.getFullYear()}`
+            cb(null, uniqueSuffix + '-' + file.fieldname + '-' + Date.now() + ext)
+        }
+        
     }
 })
 
@@ -31,15 +46,32 @@ const upload = multer({
         fileSize : 1024*1024*4
     },
     fileFilter : (req, file, cb) => {
-        if (file.mimetype == 'image/jpeg' || file.mimetype == 'image/png' || file.mimetype == 'image/svg') {
+
+        if (file.fieldname == 'photos') {
+            if (file.mimetype == 'image/jpeg' || file.mimetype == 'image/png' || file.mimetype == 'image/svg') {
             cb(null, true)
-        } else {
+            } else {
             cb(console.log('Invalid file type'))
+            }
+        }else if(file.fieldname == 'cv') {
+
+            if (file.mimetype == 'application/pdf') {
+            cb(null, true)
+            } else {
+            cb(console.log('Invalid file type'))
+            }
         }
+        
     }
 })
 
-app.post('/upload', upload.array('photos', 8), (req, res) => {
+// Multer upload fields
+const fields = upload.fields([
+    {name: 'photos', maxCount: 8},
+    {name: 'cv', maxCount: 1}
+])
+
+app.post('/upload', fields, (req, res) => {
     res.send('File upload done')
 })
 
