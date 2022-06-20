@@ -5,6 +5,6 @@ const photoModel = mongoose.Schema({
         type : String,
         required : [true, 'Photo is required']
     }
-})
+},{ timestamps : true })
 
 module.exports = mongoose.model('Photo', photoModel)
